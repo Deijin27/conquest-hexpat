@@ -185,7 +185,7 @@ struct Material
 		float transS;
 		float transT;
 	}
-	if ((flag & 0x2000) == 0) // effectmtx
+	if ((flag & 0x2000) != 0) // effectmtx
 	{
 		float effectMtx[0x10];
 	}
@@ -198,17 +198,19 @@ struct MaterialSet
 	OffsetRadixDict materialSetDict;
 	ToMatRadixDict texToMatDict;
 	ToMatRadixDict palToMatDict;
-	//u8 texMaterials[1];
-	//u8 palMaterials[palToMatDict.entryCount];
-	// how can i loop through the values now?
+	u8 texMaterials[texToMatDict.entryCount];
+	u8 palMaterials[palToMatDict.entryCount];
+	Material materials[materialSetDict.entryCount];
 };
 
-enum NNS_G3D_SHPFLAG : u32
+bitfield NNS_G3D_SHPFLAG
 {
-	USE_NORMAL = 1,
-	USE_COLOR = 2,
-	USE_TEXCOORD = 4,
-	USE_RESTOREMTX = 8,
+	padding: 28;
+	USE_RESTOREMTX: 1;
+	USE_TEXCOORD: 1;
+	USE_COLOR: 1;
+	USE_NORMAL: 1;
+	
 };
 
 struct Shape
@@ -225,7 +227,8 @@ struct ShapeSet
 {
 	OffsetRadixDict shapeSetDict;
 	Shape shapes[shapeSetDict.entryCount];
-	// get the dls somehow
+	// get the dls somehow.
+	// they start here, their offset values are relative to the start of the shapes list
 };
 
 struct EvpMatrixEnvelope
@@ -246,9 +249,6 @@ struct Model
 	NodeSet nodes;
 	u8 sbc[offsetMaterial-offsetSbc];
 	MaterialSet materials;
-    $ = offsetShape + 68;
-	
-	//padding [offsetShape-offsetMaterial];
 	ShapeSet shapes;
 	if (offsetEvpMatrix != 0)
 	{
@@ -268,11 +268,13 @@ struct MDL0
 struct BMD0
 {
 	NitroFileHeader header;
-	u32 chunk1Offset;
+	u32 chunkOffsets[header.chunkCount];
 	MDL0 mdl0;
 };
 
 BMD0 bmd0 @ 0x00;
+
+
 
 
 
