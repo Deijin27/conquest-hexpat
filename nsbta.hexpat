@@ -47,25 +47,48 @@ struct OffsetRadixDict : RadixDict
 	Name names[entryCount];
 };
 
-struct BigRadixDict : RadixDict
+struct ChannelData
 {
-    u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
-	u32 offsets[entryCount];
+	u16 numFrames;
+	u8 unknown;
+	u8 flags;
+	u32 offset;
+};
+
+struct MaterialTrackRadixData
+{
+	ChannelData scaleU;
+	ChannelData scaleV;
+	ChannelData rot;
+	ChannelData transU;
+	ChannelData transV;
+};
+
+struct MaterialTrackRadixDict : RadixDict
+{
+	MaterialTrackRadixData data[entryCount];
 	Name names[entryCount];
+};
+
+struct Anim
+{
+	char type;
+	if (type == 'M')
+	{
+		u8 revision;
+		char type1[2];
+	}
+	u16 numFrames;
+	u8 flag;
+	u8 texMtxMode;
+	MaterialTrackRadixDict materialTrackRadix;
 };
 
 struct SRT0
 {
 	NitroChunkHeader header;
 	OffsetRadixDict mdlDict;
-	
+	Anim anim[mdlDict.entryCount];
 };
 
 struct BTA0
@@ -75,9 +98,6 @@ struct BTA0
 	SRT0 srtChunk;
 };
 
-
-
-
 BTA0 bta0 @ 0x00;
-BigRadixDict inner @ 0x4C;
+
 
