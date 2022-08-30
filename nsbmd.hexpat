@@ -198,8 +198,13 @@ struct MaterialSet
 	OffsetRadixDict materialSetDict;
 	ToMatRadixDict texToMatDict;
 	ToMatRadixDict palToMatDict;
-	u8 texMaterials[texToMatDict.entryCount];
-	u8 palMaterials[palToMatDict.entryCount];
+	u8 texMaterials[materialSetDict.entryCount];
+	u8 palMaterials[materialSetDict.entryCount];
+	
+	if ((2 * materialSetDict.entryCount) % 4 != 0)
+	{
+	    padding[4 - (2 * materialSetDict.entryCount) % 4];
+	}
 	Material materials[materialSetDict.entryCount];
 };
 
@@ -273,6 +278,12 @@ struct BMD0
 };
 
 BMD0 bmd0 @ 0x00;
+
+
+
+
+
+
 
 
 
