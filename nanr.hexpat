@@ -46,7 +46,9 @@ struct ABNK
     u32 blockOffset_Cells;
     u64 reserved;
     AnimBank banks[bankCount];
-    // pad with 0xCC to be divisible by 4 ?
+    // There's sometimes 0xCCCC in frame cell slots. I imagine this might be slots that were used previously
+    // but now not. Here's an example:
+    //graphics\strategy\kuniimage2\03_00_parts_kuniimage_06_up_anim-Unpacked\0000.nanr
 };
 
 struct Label
@@ -59,7 +61,6 @@ struct LABL
 {
     NitroChunkHeader header;
     Label labels[parent.animBankChunk.bankCount];
-    // null terminated names, i guess just until you hit the end.
 };
 
 struct UEXT
