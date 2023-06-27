@@ -54,13 +54,13 @@ struct ABNK
 struct Label
 {
     u32 offsetName;
-    char name[] @ (16 + parent.parent.animBankChunk.header.chunkLength + 8 + parent.parent.animBankChunk.bankCount * 4 + offsetName);
+    char name[] @ (16 + parent.parent.bankChunk.header.chunkLength + 8 + parent.parent.bankChunk.bankCount * 4 + offsetName);
 };
 
 struct LABL
 {
     NitroChunkHeader header;
-    Label labels[parent.animBankChunk.bankCount];
+    Label labels[parent.bankChunk.bankCount];
 };
 
 struct UEXT
@@ -72,9 +72,9 @@ struct UEXT
 struct NANR
 {
     NitroFileHeader header;
-    ABNK animBankChunk;
-    LABL labels @ (16 + animBankChunk.header.chunkLength);
-    UEXT uext @ (16 + animBankChunk.header.chunkLength + labels.header.chunkLength);
+    ABNK bankChunk;
+    LABL labels @ (16 + bankChunk.header.chunkLength);
+    UEXT uext @ (16 + bankChunk.header.chunkLength + labels.header.chunkLength);
 };
 
 NANR nanr @ 0x00;
